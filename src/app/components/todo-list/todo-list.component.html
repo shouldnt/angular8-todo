@@ -1,0 +1,50 @@
+<form action="#">
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Insert Todo" [(ngModel)] = "todoTitle" #ctrl="ngModel" name="todoTitle" (keyup.enter)="addTodo()">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="todo-item d-flex justify-content-between text-nowrap" *ngFor="let todo of todosFiltered()">
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="mr-2" [(ngModel)]="todo.completed" name="completed">
+                    <div *ngIf="!todo.editing; else editingTodo" class="todo-item-label" [ngClass]="{ 'completed' : todo.completed }" (dblclick)="editTodo(todo)">{{todo.title}}</div>
+                    <ng-template #editingTodo>
+                        <input type="text" class="form-control todo-item" [(ngModel)]="todo.title" name="singleTodoTitle_{{todo.id}}" (blur)="doneEdit(todo)" (keyup.enter)="doneEdit(todo)" (keyup.esc)="cancelEdit(todo)" autofocus>
+                    </ng-template>
+                </div>
+                <a href="#" class="removeItem" (click)="deleteTodo(todo.id)">×</a>
+           </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="d-flex">
+        <input type="checkbox" (change)="checkAll()">
+        <p>Check All</p>
+    </div>
+    <hr>
+
+    <div class="d-flex">
+
+        <button type="button" class="btn btn-outline-dark" [ngClass]="{ 'btn-dark text-white' : filter == 'all'}" (click)="filter = 'all';">All</button>
+        <button type="button" class="btn btn-outline-dark" [ngClass]="{'btn-dark text-white' : filter == 'active'}" (click)="filter = 'active';">Active</button>
+        <button type="button" class="btn btn-outline-dark" [ngClass]="{'btn-dark text-white' : filter == 'completed'}" (click)="filter = 'completed';">Completed</button>
+    </div>
+    <hr>
+
+    <p>{{remaining()}} item left</p>
+    <hr>
+
+    <button *ngIf="atLeastOneCompleted();" (click)="clearCompleted()">Clear Completed</button>
+
+   
+</form>
+
+
